@@ -987,7 +987,10 @@ kyelcrga-cee-yaosgqgrgml-808[izdqr]
 hplazytkpo-prr-cpnptgtyr-379[prtya]")
 
 (def lines (split input "\n"))
+(def alphabet (map-indexed (fn [i x] [i x]) ["a" "b" "c" "d" "e" "f" "g" "h" "i" "j" "k" "l" "m" "n" "o" "p" "q" "r" "s" "t" "u" "v" "w" "x" "y" "z"]))
 
+(def letter->index (reduce (fn [m [i x]] (assoc m x i)) {} alphabet))
+(def index->letter (reduce (fn [m [i x]] (assoc m i x)) {} alphabet))
 
 (defn id-of [x]
   (string/replace x #"^.*-(\d*)\[.*$" "$1"))
@@ -1000,11 +1003,22 @@ hplazytkpo-prr-cpnptgtyr-379[prtya]")
 (defn checksum-of [x]
   (string/replace x #"^.*\[(.*)\].*$" "$1"))
 
+(defn decrypt-letter [x id]
+  (let [letter x
+        index (letter->index x)
+        n-index (mod (+ index id) 26)
+        n-letter (index->letter n-index)]
+    n-letter))
+
 
 (def real-score (map (fn [x]
                        (let [name (name-of x)
                              id (js/parseInt (id-of x))
                              checksum (checksum-of x)
+
+                             real-name (join "" (map (fn [x] (decrypt-letter x id)) name))
+
+                             _ (println "==>" real-name " /// " id)
 
                              freq-order-with-tie (map second (reverse (sort-by first (group-by second (frequencies name)))))
                              freq-order-without-tie (map (fn [x] (sort (map first x))) freq-order-with-tie)
@@ -1014,12 +1028,8 @@ hplazytkpo-prr-cpnptgtyr-379[prtya]")
                          (if valid? id 0)))
                      lines))
 
-(def total-score (reduce + real-score))
+(pprint letter->index)
 
-;; (def +freq+order (map (fn [x]
-;;                         (let [
-;;                               valid? ]
-;;                               (assoc x :freq freq)))
-;;                       sep-lines))
+(def total-score (reduce + real-score))
 
 (pprint total-score)
