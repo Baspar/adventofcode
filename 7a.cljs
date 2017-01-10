@@ -2021,8 +2021,6 @@ bwzsacxgqkbjycgfw[dbnligvrmqscasutn]rbgybqqsgjvlonkut")
 (defn valid? [x]
   (let [inside (:inside x)
         outside (:outside x)]
-    (print "outside" outside)
-    (print "inside" inside)
     (and (some abba? outside)
          (not-any? abba? inside))))
 
