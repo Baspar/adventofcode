@@ -9,18 +9,18 @@
                              (apply mapv vector)
                              (map frequencies)))
 
-(def answer-a (->> inputs-freq-by-col
-                   (map #(sort-by second %))
-                   (map last)
-                   (map first)
-                   (apply str)))
+(defn format [x]
+  (->> x
+       (map last)
+       (map first)
+       (apply str)))
 
-(def answer-b (->> inputs-freq-by-col
-                   (map #(reverse (sort-by second %)))
-                   (map last)
-                   (map first)
-                   (apply str)))
+(def answer-a (map #(sort-by second %)
+                   inputs-freq-by-col))
 
-(pprint answer-a)
-(pprint answer-b)
+(def answer-b (map #(reverse (sort-by second %))
+                   inputs-freq-by-col))
+
+(pprint (format answer-a))
+(pprint (format answer-b))
 
